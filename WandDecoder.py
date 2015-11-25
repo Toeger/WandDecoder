@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from struct import unpack
-from md5 import md5
+from hashlib import md5
 import pyDes
 
 #Explanation for decrypting process: http://securityxploded.com/operapasswordsecrets.php
@@ -27,10 +27,10 @@ def decode_block(file):
         if endpos % 2 == 1:
             endpos += 1
         data = data[:endpos]
-    data = data.decode("UTF-16")
+    data = data.decode("utf-16")
     data = data.rstrip(u"ࠈ؆Ȃ")
     #print data
-    print(data)
+    print(data.encode("utf-8"))
 
 def decode_file(file_path):
     with open(file_path, "rb") as file:
@@ -46,7 +46,7 @@ def decode_file(file_path):
 
 from sys import argv
 
-filename = "wand.dat"
+filename = "../wand1.dat"
 if len(argv) > 1:
     filename = argv[1]
 decode_file(filename)
