@@ -7,7 +7,7 @@ import pyDes
 #Explanation for decrypting process: http://securityxploded.com/operapasswordsecrets.php
 #They mention that the original reverse engineering was done by sna@reteam.org, but I could find no evidence of that on reteam.org
 
-salt="0x83, 0x7D, 0xFC, 0x0F, 0x8E, 0xB3, 0xE8, 0x69, 0x73, 0xAF, 0xFF".replace("0x", "").replace(", ", "").decode("hex")
+salt = bytes.fromhex("0x83, 0x7D, 0xFC, 0x0F, 0x8E, 0xB3, 0xE8, 0x69, 0x73, 0xAF, 0xFF".replace("0x", "").replace(", ", ""))
 
 def decode_block(file):
     # get past obfuscation:
@@ -22,7 +22,7 @@ def decode_block(file):
     #decrypt data block:
     data = pyDes.triple_des(md51+md52[:8], pyDes.CBC, md52[8:]).decrypt(encrypted_data)
     #clean up data:
-    endpos = data.find("0000".decode("hex"))
+    endpos = data.find(bytes.fromhex("0000"))
     if endpos != -1:
         if endpos % 2 == 1:
             endpos += 1
@@ -36,8 +36,8 @@ def decode_file(file_path):
     with open(file_path, "rb") as file:
         while True:
             # find an int of 4 bytes with value of 8 which marks the start of a block
-            s = "xxxx"
-            g = "00000008".decode("hex")
+            s = b"xxxx"
+            g = bytes.fromhex("00000008")
             while s != g:
                 s = s[1:] + file.read(1)
                 if len(s) != 4:
